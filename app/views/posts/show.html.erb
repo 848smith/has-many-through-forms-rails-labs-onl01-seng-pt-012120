@@ -1,1 +1,25 @@
+<h1><%= @post.title %></h1>
+<h2><%= @post.content %></h2>
 
+<h3>Comments</h3>
+
+<% @post.comments.each do |comment| %>
+    <p><%= comment.user.username %> says: <%= comment.content %></p>
+<% end %>
+
+<h4>Add Comment</h4>
+
+<%= form_for Comment.new do |f| %>
+    <%= f.label "Comment" %>
+    <%= f.text_area :content %>
+    <br>
+    <%= f.collection_select :user_id, User.all, :id, :username, include_blank: "Select a User" %>
+    <br>
+    <h5>Create a User for the Post</h5>
+    <%= f.fields_for :user, User.new do |user| %>
+        <%= user.text_field :username %>
+    <% end %>
+    <br>
+    <%= f.hidden_field :post_id, value: @post.id%>
+    <%= f.submit %>
+<% end %>
